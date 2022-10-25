@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">SensiMate</string>
+    <string name="profile">Profile</string>
+    <string name="events">Events</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_sig_in">SigInActivity</string>
+    <string name="title_activity_create_survey">CreateSurveyActivity</string>
+    <string name="title_activity_create_event">CreateEventActivity</string>
+    <string name="title_activity_launch_survey">LaunchSurveyActivity</string>
+    <string name="title_activity_start_survey">StartSurveyActivity</string>
+    <string name="title_activity_survey">SurveyActivity</string>
+    <string name="title_activity_update_profile">UpdateProfileActivity</string>
+</resources>
