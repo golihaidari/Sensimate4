@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
 interface SensiMateDestination {
@@ -12,22 +13,23 @@ interface SensiMateDestination {
     val icon: ImageVector
 }
 
-object Welcome : SensiMateDestination {
-    override val title= "welcome"
-    override val route = "welcome"
-    override val icon = Icons.Default.Home
+
+object Events : SensiMateDestination {
+    override val title= "Events"
+    override val route = "events"
+    override val icon = Icons.Default.DateRange
+}
+
+object Search : SensiMateDestination {
+    override val title= "Search"
+    override val route = "Search"
+    override val icon = Icons.Default.Search
 }
 
 object Profile : SensiMateDestination {
-    override val title= "profile"
+    override val title= "Profile"
     override val route = "profile"
     override val icon = Icons.Default.Person
-}
-
-object Events : SensiMateDestination {
-    override val title= "events"
-    override val route = "events"
-    override val icon = Icons.Default.DateRange
 }
 
 

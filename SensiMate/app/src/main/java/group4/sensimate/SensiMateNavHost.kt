@@ -17,6 +17,9 @@ fun SensiMateNavHost( navController: NavHostController) {
         composable(route = Events.route) {
             EventsScreen( )
         }
+        composable(route = Search.route) {
+           // SearchScreen( )
+        }
         composable(route = Profile.route) {
             ProfileScreen( )
         }
