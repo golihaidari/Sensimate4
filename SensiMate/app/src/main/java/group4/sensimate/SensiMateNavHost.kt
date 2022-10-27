@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import group4.sensimate.ui.events.EventsScreen
 import group4.sensimate.ui.profile.ProfileScreen
+import group4.sensimate.ui.search.SearchScreen
 
 @Composable
 fun SensiMateNavHost( navController: NavHostController) {
@@ -18,7 +19,7 @@ fun SensiMateNavHost( navController: NavHostController) {
             EventsScreen( )
         }
         composable(route = Search.route) {
-           // SearchScreen( )
+           SearchScreen( )
         }
         composable(route = Profile.route) {
             ProfileScreen( )
