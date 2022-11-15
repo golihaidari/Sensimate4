@@ -1,172 +1,76 @@
 package group4.sensimate.ui.events
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import group4.sensimate.R
-import group4.sensimate.data.Event
-import group4.sensimate.data.EventSource
-import group4.sensimate.ui.survey.LaunchSurveyActivity
+import group4.sensimate.data.repository.EventSource
+import group4.sensimate.ui.components.GradientButton
+import group4.sensimate.ui.components.GradientEventList
+import group4.sensimate.ui.components.GradientText
+import group4.sensimate.ui.navigation.graphs.Graph
 import group4.sensimate.ui.theme.SensiMateTheme
-
-
-@Composable
-fun EventsScreen(){
-    EventList(eventList = EventSource().loadEvents())
-}
+import group4.sensimate.UserPreferences
+import kotlinx.coroutines.launch
 
 @Composable
-fun EventList(eventList: List<Event>) {
-
-    LazyColumn(
-        contentPadding = PaddingValues(15.dp),
+fun EventsScreen(navController: NavController){
+    val context= LocalContext.current
+    val role = UserPreferences(context).getRole.collectAsState(initial = "")
+    Column(
+        horizontalAlignment= Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(color= colorResource(R.color.background))
-    ) {
-        items(eventList){event ->
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                colorResource(R.color.light_carmine_pink),
-                                colorResource(R.color.violets_blue)
-                            )
-                        )
-                    )
-                )
-            {
-                EventCard(event = event)
-            }
-        }
-    }
+            .background(color = colorResource(R.color.background))
+    ){
+        Spacer(modifier = Modifier.height(32.dp))
 
-}
+        GradientText(text= "Events", fontSize= 40)
 
-@Composable
-fun EventCard(event: Event){
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Card(
-            backgroundColor = Color.Transparent,
-            shape = RoundedCornerShape(20.dp),
-            elevation = 5.dp,
-            border= BorderStroke(
-                2.dp,
-                brush = Brush.horizontalGradient(
-                    colors = listOf(
-                        colorResource(R.color.light_carmine_pink),
-                        colorResource(R.color.violets_blue)
-                    )
-                )
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(10.dp)
-        )
-        {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
+        val scope = rememberCoroutineScope()
+
+        if(role.value.toString() == "Admin"){
+            Spacer(modifier = Modifier.padding(10.dp))
+            GradientButton(
+                onClick = {
+                    scope.launch {
+                        navController.navigate(Graph.EVENT_DETAILS)
+                    }
+                },
+                text = "Create Event",
+                fontSize= 20,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                colorResource(R.color.light_carmine_pink),
-                                colorResource(R.color.violets_blue)
-                            )
-                        )
-                    )
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             )
-            {
-                Image(
-                    painter = painterResource(event.imageId),
-                    contentDescription = null,//stringResource(event.id),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .size(130.dp)
-                        .padding(8.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Gray, CircleShape)
-                )
-                Column(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .background(Color.Transparent)
-                )
-                {
-                    Text(text = event.title)
-                    Text(text = event.description)
-                    Text(text = event.startDate)
-                    Text(text = event.endDate)
 
-                    val context = LocalContext.current
-                    OutlinedButton(
-                        onClick = {
-                            context.startActivity(
-                                Intent(
-                                    context,
-                                    LaunchSurveyActivity::class.java
-                                )
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Transparent),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-                        border = BorderStroke(
-                            2.dp,
-                            Brush.horizontalGradient(
-                            colors = listOf(
-                                colorResource(R.color.light_carmine_pink),
-                                colorResource(R.color.violets_blue)
-                            )
-                        ))
-                    ) {
-                        Text("Evaluate", fontSize = 20.sp, color = Color.Black)
-                    }
-                }
-            }
         }
+
+        GradientEventList(
+            eventList = EventSource().loadEvents(),
+            page="EventPage",
+            navController
+        )
     }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun EventPreview() {
     SensiMateTheme {
-        EventsScreen()
+        EventsScreen(navController=  rememberNavController())
         //EventCard(Event(1, R.drawable.ic_launcher_background,"Test", "Test", "11",""))
     }
 }

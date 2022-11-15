@@ -7,7 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="background">#2D3047</color>
+
+
+    <color name="backgroundold">#2D3047</color>
+    <color name="background">#1E1E1E</color>
     <color name="violets_blue">#9B6BFE</color>
     <color name="light_carmine_pink">#EF7067</color>
 
@@ -16,4 +19,6 @@
     <color name="pink_100">#F9B8D0</color>
     <color name="pink_200">#E19AB8</color>
     <color name="pink_300">#DF6CB1</color>
+
+    <color name="light_green">#34D227</color>
 </resources>
