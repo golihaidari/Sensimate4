@@ -1,5 +1,7 @@
 package group4.sensimate.ui.survey
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,13 +35,17 @@ import androidx.compose.ui.unit.dp
 import com.siddroid.holi.brushes.GradientMixer
 import group4.sensimate.R
 import group4.sensimate.data.model.*
+import group4.sensimate.data.repository.surveyQuestions
 import group4.sensimate.ui.theme.SensiMateTheme
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
 
 class SurveyActivity : ComponentActivity() {
     val viewModel: SurveyViewModel by viewModels {
         SurveyViewModelFactory()
     }
 
+    @SuppressLint("SdCardPath")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -51,18 +57,23 @@ class SurveyActivity : ComponentActivity() {
                 when (state) {
                     is SurveyState.Questions -> SurveyScreen(
                         questions = state,
-                        onDonePressed = { viewModel.computeResult(state) },
+                        onDonePressed = { viewModel.computeResult(state)},
                         onBackPressed = {
-                            this?.onBackPressedDispatcher?.onBackPressed()
+                            this.onBackPressedDispatcher?.onBackPressed()
                         }
                     )
                     is SurveyState.Result -> SurveyResultScreen(
                         result = state,
                         onDonePressed = {
-                            this?.onBackPressedDispatcher?.onBackPressed()
+                            this.onBackPressedDispatcher?.onBackPressed()
                         }
                     )
                 }
+
+                    FileOutputStream("/data/user/0/group4.sensimate/files/Surveys.csv").apply { writeCsv(surveyQuestions) }
+
+
+
             }
         }
     }
@@ -179,6 +190,7 @@ fun SurveyScreen(
         )
 
     }
+
 }
 
 

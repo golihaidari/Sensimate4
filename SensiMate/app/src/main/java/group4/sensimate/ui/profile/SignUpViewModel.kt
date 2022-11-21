@@ -6,7 +6,7 @@ import group4.sensimate.data.model.User
 import group4.sensimate.data.repository.UserRepository
 
 
-class SignUpViewModel() : ViewModel() {
+class SignUpViewModel : ViewModel() {
 
     var profileImage by mutableStateOf("")
         private set

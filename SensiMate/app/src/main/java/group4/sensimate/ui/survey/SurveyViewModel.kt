@@ -1,9 +1,11 @@
 package group4.sensimate.ui.survey
 
 import androidx.lifecycle.*
+import group4.sensimate.data.model.Question
 import group4.sensimate.data.repository.SurveyData
 import group4.sensimate.data.repository.SurveyRepository
 import kotlinx.coroutines.launch
+import java.io.FileOutputStream
 
 
 class SurveyViewModel (
@@ -13,6 +15,8 @@ class SurveyViewModel (
     private val _uiState = MutableLiveData<SurveyState>()
     val uiState: LiveData<SurveyState> get() = _uiState
     private lateinit var surveyInitialState: SurveyState
+
+
 
     init {
         viewModelScope.launch {
@@ -32,8 +36,10 @@ class SurveyViewModel (
 
             surveyInitialState = SurveyState.Questions(survey.id, questions)
             _uiState.value = surveyInitialState
+
         }
     }
+
 
 
     fun computeResult(surveyQuestions: SurveyState.Questions) {
@@ -53,8 +59,7 @@ class SurveyViewModel (
 
 
 
-class SurveyViewModelFactory(
-) : ViewModelProvider.Factory {
+class SurveyViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SurveyViewModel::class.java)) {

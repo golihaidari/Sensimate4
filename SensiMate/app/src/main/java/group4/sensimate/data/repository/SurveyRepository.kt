@@ -6,8 +6,11 @@ import group4.sensimate.data.model.PossibleAnswer
 import group4.sensimate.data.model.Question
 import group4.sensimate.data.model.Survey
 import group4.sensimate.ui.survey.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
-private val surveyQuestions = mutableListOf(
+val surveyQuestions = mutableListOf(
     Question(1,1,"who do like most?", answer= PossibleAnswer.SingleChoice( listOf<String>( "parent","friends","sibling"))),
     Question(1,2,"which sport do you like?", answer = PossibleAnswer.MultipleChoice( listOf<String>( "soccer", "tenis","chess"))),
     Question(1,3,"how do you feel about ux course?", answer = PossibleAnswer.Slider(
@@ -19,9 +22,10 @@ private val surveyQuestions = mutableListOf(
 
     ).toList()
 
+
 private val survey = Survey(
     id = 1,
-    questions = surveyQuestions
+    questions = surveyQuestions,
 )
 
 
@@ -35,6 +39,7 @@ object SurveyData : SurveyRepository {
             library = "Done",
             result = R.string.survey_result,
             description = R.string.survey_result_description
+
         )
     }
 }
@@ -43,4 +48,5 @@ interface SurveyRepository {
     fun getSurvey(): Survey
 
     fun getSurveyResult(answers: List<Answer<*>>): SurveyResult
+
 }

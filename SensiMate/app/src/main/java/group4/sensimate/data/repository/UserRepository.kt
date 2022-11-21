@@ -3,7 +3,7 @@ package group4.sensimate.data.repository
 import group4.sensimate.data.model.User
 
 
-class UserRepository(){
+class UserRepository {
     private val users = mutableListOf<User>(
         User("Golbas Haidari","Goli","goli@dtu.dk","1234","01-01-2222","female","1000"),
         User("Admin admin", "Admin","user@admin.dk","1234","01-01-2222","female","1200")
@@ -39,7 +39,7 @@ class UserRepository(){
 
     fun updateUser(user : User): Boolean{
         try {
-            val u = user.username?.let { getUser(it) }
+            val u = user.username.let { getUser(it) }
             if (u != null) {
                 u.password = user.password
                 return true

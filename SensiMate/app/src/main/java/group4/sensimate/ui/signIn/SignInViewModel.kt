@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import group4.sensimate.data.repository.UserRepository
 
-class SignInViewModel() : ViewModel() {
+class SignInViewModel : ViewModel() {
     var username by mutableStateOf("")
         private set
     var password by mutableStateOf("")

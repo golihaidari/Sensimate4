@@ -10,9 +10,12 @@ import androidx.navigation.compose.rememberNavController
 import group4.sensimate.ui.theme.SensiMateTheme
 import androidx.compose.material.Scaffold
 import androidx.navigation.NavHostController
+import group4.sensimate.data.repository.surveyQuestions
 import group4.sensimate.ui.navigation.ButtonNavBar
 import group4.sensimate.ui.navigation.graphs.HomeNavGraph
 import group4.sensimate.ui.navigation.graphs.RootNavigationGraph
+import group4.sensimate.ui.survey.writeCsv
+import java.io.FileOutputStream
 
 class SensiMateActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
