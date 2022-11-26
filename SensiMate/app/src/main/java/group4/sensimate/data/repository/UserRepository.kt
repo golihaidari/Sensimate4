@@ -39,9 +39,15 @@ class UserRepository(){
 
     fun updateUser(user : User): Boolean{
         try {
-            val u = user.username?.let { getUser(it) }
+            val u = getUser(user.username)
             if (u != null) {
+                u.fullname= user.fullname
                 u.password = user.password
+                u.email = user.email
+                u.birthday= user.birthday
+                u.gender= user.gender
+                u.postalcode = user.postalcode
+
                 return true
             }
             return false

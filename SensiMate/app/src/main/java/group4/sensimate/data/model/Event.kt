@@ -4,10 +4,10 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class Event(
-    val id : Int,
-    val imageId: Int,
-    val title: String,
-    val description: String,
-    val startDate: String,
-    val endDate: String
+    val id : Int? = null,
+    val imageId: Int? = null,
+    val title: String = "",
+    val description: String = "",
+    val startDate: String = "",
+    val endDate: String = ""
 )

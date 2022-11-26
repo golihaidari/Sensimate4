@@ -29,7 +29,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import group4.sensimate.R
 import group4.sensimate.data.model.Event
-import group4.sensimate.ui.navigation.graphs.SurveyDetailsScreen
+import group4.sensimate.presentation.navigation.graphs.SurveyDetailsScreen
 import group4.sensimate.ui.theme.sensiMateColor
 import group4.sensimate.ui.theme.sensiMateHorizontalColor
 import group4.sensimate.ui.theme.sensiMateVerticalColor
@@ -99,7 +99,7 @@ fun EventCard(event: Event, page: String, navController: NavController){
         )
         {
             Image(
-                painter = painterResource(event.imageId),
+                painter = painterResource(event.imageId!!),
                 contentDescription = null,//stringResource(event.id),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -120,7 +120,6 @@ fun EventCard(event: Event, page: String, navController: NavController){
                 Text(text = event.startDate)
                 Text(text = event.endDate)
 
-                val context = LocalContext.current
                 if(page =="Profile") {
                     OutlinedButton(
                         onClick = {    },
