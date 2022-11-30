@@ -10,7 +10,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.TimeUnit
 
-@SuppressLint("UnsafeOptInUsageError")
+
 class BarCodeAnalyser(
     private val onBarcodeDetected: (barcodes: List<Barcode>) -> Unit,
 ): ImageAnalysis.Analyzer {
@@ -26,7 +26,7 @@ class BarCodeAnalyser(
                 val barcodeScanner = BarcodeScanning.getClient(options)
                 val imageToProcess = InputImage.fromMediaImage(imageToAnalyze, image.imageInfo.rotationDegrees)
 
-                barcodeScanner.process(imageToProcess)
+                var addOnCompleteListener = barcodeScanner.process(imageToProcess)
                     .addOnSuccessListener { barcodes ->
                         if (barcodes.isNotEmpty()) {
                             onBarcodeDetected(barcodes)
@@ -40,6 +40,7 @@ class BarCodeAnalyser(
                     .addOnCompleteListener {
                         image.close()
                     }
+                addOnCompleteListener
             }
             lastAnalyzedTimeStamp = currentTimestamp
         } else {

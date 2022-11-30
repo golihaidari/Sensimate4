@@ -42,6 +42,7 @@ import group4.sensimate.ui.components.GradientTextField
 import group4.sensimate.ui.components.ProfileImage
 import group4.sensimate.ui.theme.SensiMateTheme
 import group4.sensimate.UserPreferences
+import group4.sensimate.ui.components.getPickedDateAsString
 import java.util.*
 
 @Composable
@@ -245,7 +246,6 @@ fun UpdateProfileScreen(navController: NavController, vm: UserViewModel = viewMo
                 onClick = {
                     if (vm.updateUserInfo()) {
                         navController.popBackStack()
-                        //context.startActivity(Intent(context, SensiMateActivity::class.java))
                     } else {
                         Toast.makeText(context, "Error Occurred!", Toast.LENGTH_SHORT).show()
                     }
@@ -268,10 +268,3 @@ fun UpdateProfilePreview() {
     }
 }
 
-@SuppressLint("SimpleDateFormat")
-private fun getPickedDateAsString(year: Int, month: Int, day: Int): String {
-    val calendar = Calendar.getInstance()
-    calendar.set(year, month, day)
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-    return dateFormat.format(calendar.time)
-}

@@ -1,5 +1,6 @@
 package group4.sensimate.ui.components
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,6 +35,7 @@ import group4.sensimate.ui.theme.sensiMateColor
 import group4.sensimate.ui.theme.sensiMateHorizontalColor
 import group4.sensimate.ui.theme.sensiMateVerticalColor
 import group4.sensimate.UserPreferences
+import group4.sensimate.presentation.survey.SurveyActivity
 
 @Composable
 fun GradientEventList(eventList: List<Event>, page: String, navController: NavController) {
@@ -54,14 +56,6 @@ fun GradientEventList(eventList: List<Event>, page: String, navController: NavCo
                     .background( brush = sensiMateVerticalColor() )
             )
             {
-                /* Row(
-                     horizontalArrangement = Arrangement.Center,
-                     verticalAlignment = Alignment.CenterVertically,
-                     modifier = Modifier.fillMaxWidth()
-                         .padding(20.dp)
-                 ) {
-
-                 }*/
                 val context= LocalContext.current
                 val role = UserPreferences(context).getRole.collectAsState(initial = "")
 
@@ -76,11 +70,9 @@ fun GradientEventList(eventList: List<Event>, page: String, navController: NavCo
 
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun EventCard(event: Event, page: String, navController: NavController){
     Card(
-        //backgroundColor = Color.Transparent,
         shape = RoundedCornerShape(20.dp),
         elevation = 5.dp,
         border= BorderStroke( 2.dp, brush = sensiMateHorizontalColor() ),
@@ -120,9 +112,13 @@ fun EventCard(event: Event, page: String, navController: NavController){
                 Text(text = event.startDate)
                 Text(text = event.endDate)
 
+
                 if(page =="Profile") {
+                    val context = LocalContext.current
                     OutlinedButton(
-                        onClick = {    },
+                        onClick = {
+                            context.startActivity(Intent(context, SurveyActivity::class.java))
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(Color.Transparent),
@@ -134,8 +130,8 @@ fun EventCard(event: Event, page: String, navController: NavController){
                 }else{
                     OutlinedButton(
                         onClick = {
-                            navController.navigate(SurveyDetailsScreen.LaunchSurvey.route)
-                                  //navController.navigate(SurveyDetailsScreen.ScanBarCode.route)
+                            //navController.navigate(SurveyDetailsScreen.LaunchSurvey.route)
+                            navController.navigate(SurveyDetailsScreen.ScanBarCode.route)
                         },
                         modifier = Modifier
                             .fillMaxWidth()

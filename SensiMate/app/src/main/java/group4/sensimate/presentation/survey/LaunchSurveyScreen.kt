@@ -3,6 +3,8 @@ package group4.sensimate.presentation.survey
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.admin.SystemUpdatePolicy
+import android.content.pm.ActivityInfo
 import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -25,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
@@ -32,16 +35,14 @@ import com.google.accompanist.insets.navigationBarsWithImePadding
 import group4.sensimate.R
 import group4.sensimate.ui.components.GradientTextField
 import group4.sensimate.presentation.navigation.graphs.SurveyDetailsScreen
+import group4.sensimate.presentation.user.UserViewModel
+import group4.sensimate.ui.components.getPickedDateAsString
 import group4.sensimate.ui.theme.SensiMateTheme
 import java.util.*
 
 @Composable
-fun LaunchSurveyScreen(navController: NavController) {
-
-        var age by remember { mutableStateOf("") }
-        var gender by remember { mutableStateOf("") }
-        var postalcode by remember { mutableStateOf("") }
-
+fun LaunchSurveyScreen(navController: NavController, vm: UserViewModel = viewModel()) {
+    SystemUpdatePolicy.createPostponeInstallPolicy()
         val focusManager = LocalFocusManager.current
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,9 +65,9 @@ fun LaunchSurveyScreen(navController: NavController) {
 
             var context = LocalContext.current
             GradientTextField(
-                text = age,
+                text = vm.birthday,
                 label= "Birthday:",
-                onChange = { age =it },
+                onChange = { vm.birthdayChange(it) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Info,
@@ -86,7 +87,7 @@ fun LaunchSurveyScreen(navController: NavController) {
                         val calendar = Calendar.getInstance()
                         DatePickerDialog(
                             context, { _, year, month, day ->
-                                age = getPickedDateAsString(year, month, day)
+                                vm.birthdayChange(getPickedDateAsString(year, month, day))
                             },
                             calendar.get(Calendar.YEAR),
                             calendar.get(Calendar.MONTH),
@@ -96,9 +97,9 @@ fun LaunchSurveyScreen(navController: NavController) {
             )
 
             GradientTextField(
-                text = gender,
+                text = vm.gender,
                 label = "Gender:",
-                onChange = {gender =it },
+                onChange = {vm.genderChange(it) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Info,
@@ -116,9 +117,9 @@ fun LaunchSurveyScreen(navController: NavController) {
             )
 
             GradientTextField(
-                text = postalcode,
+                text = vm.postalcode,
                 label = "Postal Code:",
-                onChange = { postalcode = it },
+                onChange = { vm.postalcodeChange(it) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Info,
@@ -171,12 +172,4 @@ fun LaunchSurveyScreenPreview() {
     SensiMateTheme {
         LaunchSurveyScreen(navController = rememberNavController())
     }
-}
-
-@SuppressLint("SimpleDateFormat")
-private fun getPickedDateAsString(year: Int, month: Int, day: Int): String {
-    val calendar = Calendar.getInstance()
-    calendar.set(year, month, day)
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-    return dateFormat.format(calendar.time)
 }

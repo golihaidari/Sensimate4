@@ -1,5 +1,6 @@
 package group4.sensimate.presentation.survey
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,8 +32,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.siddroid.holi.brushes.GradientMixer
 import group4.sensimate.R
+import group4.sensimate.UserPreferences
 import group4.sensimate.data.model.*
 import group4.sensimate.ui.theme.SensiMateTheme
 
@@ -44,10 +49,8 @@ class SurveyActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SensiMateTheme {
+                val state = viewModel.surveyState.observeAsState().value?:return@SensiMateTheme
 
-                //LoadSurvey(survey = SurveySource().loadSurveyData())
-
-                val state = viewModel.uiState.observeAsState().value?:return@SensiMateTheme
                 when (state) {
                     is SurveyState.Questions -> SurveyScreen(
                         questions = state,
@@ -79,8 +82,7 @@ fun LoadSurveyPreview() {
     }
 }
 
-private const val CONTENT_ANIMATION_DURATION = 500
-@OptIn(ExperimentalAnimationApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SurveyScreen(
     questions: SurveyState.Questions,
@@ -125,48 +127,13 @@ fun SurveyScreen(
                     onBackPressed = onBackPressed
                 )
             },
-            content = { innerPadding ->
-                AnimatedContent(
-                    targetState = questionState,
-                    transitionSpec = {
-                        val animationSpec: TweenSpec<IntOffset> = tween(CONTENT_ANIMATION_DURATION)
-                        val direction =
-                            if (targetState.questionIndex > initialState.questionIndex) {
-                                // Going forwards in the survey: Set the initial offset to start
-                                // at the size of the content so it slides in from right to left, and
-                                // slides out from the left of the screen to -fullWidth
-                                AnimatedContentScope.SlideDirection.Left
-                            } else {
-                                // Going back to the previous question in the set, we do the same
-                                // transition as above, but with different offsets - the inverse of
-                                // above, negative fullWidth to enter, and fullWidth to exit.
-                                AnimatedContentScope.SlideDirection.Right
-                            }
-                        slideIntoContainer(
-                            towards = direction,
-                            animationSpec = animationSpec
-                        ) with
-                                slideOutOfContainer(
-                                    towards = direction,
-                                    animationSpec = animationSpec
-                                )
-                    }
-                ) { targetState ->
-                    QuestionContent(
-                        question = targetState.question,
-                        answer = targetState.answer,
-                        onAnswer = {
-                            if (it !is Answer.PermissionsDenied) {
-                                targetState.answer = it
-                            }
-                            targetState.enableNext = true
-                        },
-                        modifier = Modifier
-                            //.fillMaxSize()
-                            .padding(innerPadding)
-                            .background(Color.Transparent)
-                    )
-                }
+            content = {
+                QuestionContent(
+                    question = questionState.question,
+                    answer = questionState.answer,
+                    onAnswer = { questionState.enableNext = true },
+                    modifier = Modifier.background(Color.Transparent)
+                )
             },
             bottomBar = {
                 SurveyBottomBar(
@@ -177,11 +144,11 @@ fun SurveyScreen(
                 )
             }
         )
-
     }
 }
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SurveyResultScreen(
     result: SurveyState.Result,
@@ -217,9 +184,8 @@ fun SurveyResultScreen(
 
         Scaffold(
             backgroundColor = Color.Transparent,
-            content = { innerPadding ->
-                val modifier = Modifier.padding(innerPadding)
-                SurveyResult(result = result, modifier = modifier)
+            content = {
+                SurveyResult( result = result)
             },
             bottomBar = {
                 OutlinedButton(
@@ -237,10 +203,7 @@ fun SurveyResultScreen(
 }
 
 @Composable
-private fun SurveyResult(
-    result: SurveyState.Result,
-    modifier: Modifier = Modifier
-)
+private fun SurveyResult( result: SurveyState.Result )
 {
     Box(
         modifier = Modifier.fillMaxSize()
@@ -410,14 +373,14 @@ private fun QuestionContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             when(question.answer) {
-                is PossibleAnswer.SingleChoice -> SingleChoiceQuestion(
+                is PossibleAnswer.SingleChoice -> RadioButtonQuestion(
                     possibleAnswer = question.answer,
                     answer = answer as Answer.SingleChoice?,
                     onAnswerSelected = { answer -> onAnswer(Answer.SingleChoice(answer)) },
                     modifier = Modifier.fillParentMaxWidth()
                 )
 
-                is PossibleAnswer.MultipleChoice -> MultipleChoiceQuestion(
+                is PossibleAnswer.MultipleChoice -> CheckBoxQuestion(
                     possibleAnswer = question.answer,
                     answer = answer as Answer.MultipleChoice?,
                     onAnswerSelected = { newAnswer, selected ->
@@ -444,8 +407,14 @@ private fun QuestionContent(
     }
 }
 
+/* survey can have the following question types:
+    - RadioButtonQuestion for singlechoice questions
+    -CheckboxQuestion for multichoicequestion
+    -sliderquestion for sliderquestions
+ */
+//------------------------------------------------------------------------
 @Composable
-private fun SingleChoiceQuestion(
+private fun RadioButtonQuestion(
     possibleAnswer: PossibleAnswer.SingleChoice,
     answer: Answer.SingleChoice?,
     onAnswerSelected: (String) -> Unit,
@@ -455,11 +424,7 @@ private fun SingleChoiceQuestion(
 
     val radioOptions = options.keys.toList()
 
-    val selected = if (answer != null) {
-        answer.answer
-    } else {
-        null
-    }
+    val selected = answer?.answer
 
     val (selectedOption, onOptionSelected) = remember(answer) { mutableStateOf(selected) }
 
@@ -509,7 +474,7 @@ private fun SingleChoiceQuestion(
 }
 
 @Composable
-private fun MultipleChoiceQuestion(
+private fun CheckBoxQuestion(
     possibleAnswer: PossibleAnswer.MultipleChoice,
     answer: Answer.MultipleChoice?,
     onAnswerSelected: (String, Boolean) -> Unit,
@@ -534,18 +499,18 @@ private fun MultipleChoiceQuestion(
                     .padding(vertical = 8.dp)
             ) {
                 Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.Transparent)
+                        .padding(vertical = 16.dp, horizontal = 16.dp)
                         .clickable(
                             onClick = {
                                 checkedState = !checkedState
                                 onAnswerSelected(option.value, checkedState)
                             }
                         )
-                        .padding(vertical = 16.dp, horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(text = option.key)
 
@@ -556,8 +521,7 @@ private fun MultipleChoiceQuestion(
                             onAnswerSelected(option.value, selected)
                         },
                         colors = CheckboxDefaults.colors(
-                            checkedColor = colorResource(R.color.violets_blue ),//.copy(alpha= 0.12f),
-                            //uncheckedColor = colorResource(R.color.light_carmine_pink ),
+                            checkedColor = colorResource(R.color.violets_blue ),
                             checkmarkColor = colorResource(R.color.light_carmine_pink)
                         )
                     )

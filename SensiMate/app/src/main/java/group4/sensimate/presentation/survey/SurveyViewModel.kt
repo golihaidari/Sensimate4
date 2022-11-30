@@ -10,8 +10,8 @@ class SurveyViewModel (
     private val surveyRepository: SurveyRepository,
 ): ViewModel()
 {
-    private val _uiState = MutableLiveData<SurveyState>()
-    val uiState: LiveData<SurveyState> get() = _uiState
+    private val _surveyState = MutableLiveData<SurveyState>()
+    val surveyState: LiveData<SurveyState> get() = _surveyState
     private lateinit var surveyInitialState: SurveyState
 
     init {
@@ -31,7 +31,7 @@ class SurveyViewModel (
             }
 
             surveyInitialState = SurveyState.Questions(survey.id, questions)
-            _uiState.value = surveyInitialState
+            _surveyState.value = surveyInitialState
         }
     }
 
@@ -39,11 +39,11 @@ class SurveyViewModel (
     fun computeResult(surveyQuestions: SurveyState.Questions) {
         val answers = surveyQuestions.questionsState.mapNotNull { it.answer }
         val result = surveyRepository.getSurveyResult(answers)
-        _uiState.value = SurveyState.Result(surveyQuestions.surveyId, result)
+        _surveyState.value = SurveyState.Result(surveyQuestions.surveyId, result)
     }
 
     private fun getLatestQuestionId(): Int? {
-        val latestState = _uiState.value
+        val latestState = _surveyState.value
         if (latestState != null && latestState is SurveyState.Questions) {
             return latestState.questionsState[latestState.currentQuestionIndex].question.id
         }
@@ -53,8 +53,8 @@ class SurveyViewModel (
 
 
 
-class SurveyViewModelFactory(
-) : ViewModelProvider.Factory {
+class SurveyViewModelFactory() : ViewModelProvider.Factory
+{
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SurveyViewModel::class.java)) {

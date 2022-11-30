@@ -38,6 +38,7 @@ import group4.sensimate.ui.components.GradientButton
 import group4.sensimate.ui.components.GradientTextField
 import group4.sensimate.ui.components.ProfileImage
 import group4.sensimate.presentation.navigation.graphs.AuthScreen
+import group4.sensimate.ui.components.getPickedDateAsString
 import group4.sensimate.ui.theme.SensiMateTheme
 import java.util.*
 
@@ -260,12 +261,4 @@ fun SignUpPreview() {
     SensiMateTheme {
         SignUpScreen(navController= rememberNavController())
     }
-}
-
-@SuppressLint("SimpleDateFormat")
-private fun getPickedDateAsString(year: Int, month: Int, day: Int): String {
-    val calendar = Calendar.getInstance()
-    calendar.set(year, month, day)
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-    return dateFormat.format(calendar.time)
 }

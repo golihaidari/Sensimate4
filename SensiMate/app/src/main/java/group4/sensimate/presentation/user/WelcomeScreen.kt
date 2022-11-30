@@ -1,5 +1,6 @@
 package group4.sensimate.presentation.user
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,10 +19,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import group4.sensimate.R
 import group4.sensimate.UserPreferences
+import group4.sensimate.data.model.User
 import group4.sensimate.ui.components.GradientButton
 import group4.sensimate.ui.components.GradientText
 import group4.sensimate.presentation.navigation.graphs.AuthScreen
@@ -30,11 +33,11 @@ import group4.sensimate.ui.theme.SensiMateTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun WelcomeScreen(navController: NavController) {
-    val cookieCheckedState = remember { mutableStateOf(true) }
-    val ageCheckedState = remember { mutableStateOf(true) }
+fun WelcomeScreen(navController: NavController, vm:UserViewModel =viewModel()) {
+    val user by vm.userState.collectAsState(initial= User())
+
     Column(
-        //horizontalAlignment = Alignment.CenterHorizontally,
+
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
@@ -59,8 +62,8 @@ fun WelcomeScreen(navController: NavController) {
             modifier = Modifier.padding(start=15.dp, end= 15.dp)
         ) {
             Checkbox(
-                checked = cookieCheckedState.value,
-                onCheckedChange = { cookieCheckedState.value = it },
+                checked = vm.cookieCheckedState,
+                onCheckedChange = { vm.cookieCheckedStateChange(it) },
                 colors = CheckboxDefaults.colors(
                     checkedColor = colorResource(R.color.violets_blue),
                     uncheckedColor = colorResource(R.color.light_carmine_pink ),
@@ -80,8 +83,8 @@ fun WelcomeScreen(navController: NavController) {
             modifier = Modifier.padding(start=15.dp, end= 15.dp)
         ) {
             Checkbox(
-                checked = ageCheckedState.value,
-                onCheckedChange = { ageCheckedState.value = it },
+                checked = vm.ageCheckedState,
+                onCheckedChange = { vm.ageCheckedStateChange(it)},
                 colors = CheckboxDefaults.colors(
                     checkedColor = colorResource(R.color.violets_blue),
                     uncheckedColor = colorResource(R.color.light_carmine_pink ),
@@ -101,10 +104,19 @@ fun WelcomeScreen(navController: NavController) {
         val scope = rememberCoroutineScope()
         GradientButton(
             onClick = {
+                vm.signInAsGuest()
                 scope.launch {
-                    UserPreferences(context).saveRole("Guest")
-                    navController.popBackStack()
-                    navController.navigate(Graph.HOME)
+                    if (user.isLoggedIn && vm.cookieCheckedState && vm.ageCheckedState) {
+                        UserPreferences(context).saveRole("Guest")
+                        navController.popBackStack()
+                        navController.navigate(Graph.HOME)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "please approve both using cookie & you're older than 18!!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             },
             text = "Join as Guest",

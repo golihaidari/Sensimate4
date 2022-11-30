@@ -51,9 +51,6 @@ fun ScanBarCodeScreen(navController: NavController){
 
         if(cameraPreview()) {
             navController.navigate(SurveyDetailsScreen.LaunchSurvey.route)
-
-            //val context = LocalContext.current
-            //context.startActivity(Intent(context, LaunchSurveyActivity::class.java))
         }
     }
 }
@@ -65,8 +62,6 @@ fun cameraPreview():Boolean {
     val lifecycleOwner = LocalLifecycleOwner.current
     var preview by remember { mutableStateOf<Preview?>(null) }
     val barCodeVal = remember { mutableStateOf("") }
-
-
 
     AndroidView(
         factory = { AndroidViewContext ->
@@ -108,8 +103,6 @@ fun cameraPreview():Boolean {
                         it.setAnalyzer(cameraExecutor, barcodeAnalyser)
                     }
 
-
-
                 try {
                     cameraProvider.unbindAll()
                     cameraProvider.bindToLifecycle(
@@ -118,8 +111,6 @@ fun cameraPreview():Boolean {
                         preview,
                         imageAnalysis
                     )
-
-
                 } catch (e: Exception) {
                     Log.d("TAG", "CameraPreview: ${e.localizedMessage}")
                 }

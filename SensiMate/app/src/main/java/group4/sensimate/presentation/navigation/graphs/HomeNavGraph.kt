@@ -10,12 +10,9 @@ import group4.sensimate.presentation.navigation.ButtomBarScreen
 import group4.sensimate.presentation.event.CreateEventScreen
 import group4.sensimate.presentation.event.SearchScreen
 import group4.sensimate.presentation.event.EventsScreen
+import group4.sensimate.presentation.survey.*
 import group4.sensimate.presentation.user.ProfileScreen
 import group4.sensimate.presentation.user.UpdateProfileScreen
-import group4.sensimate.presentation.survey.CreateSurveyScreen
-import group4.sensimate.presentation.survey.LaunchSurveyScreen
-import group4.sensimate.presentation.survey.ScanBarCodeScreen
-import group4.sensimate.presentation.survey.StartSurveyScreen
 
 @Composable
 fun HomeNavGraph(navController: NavHostController){
@@ -73,7 +70,7 @@ sealed class EventDetailsNavGraph(val route: String){
 fun NavGraphBuilder.surveyDetailsNavGraph(navController: NavHostController){
     navigation(
         route= Graph.SURVEY_DETAILS,
-        startDestination = SurveyDetailsScreen.LaunchSurvey.route
+        startDestination = SurveyDetailsScreen.ScanBarCode.route
     ){
         composable(route= SurveyDetailsScreen.CreateSurvey.route){
             CreateSurveyScreen(navController)
@@ -87,11 +84,11 @@ fun NavGraphBuilder.surveyDetailsNavGraph(navController: NavHostController){
         composable(route= SurveyDetailsScreen.StartSurvey.route){
             StartSurveyScreen(navController = navController)
         }
-        /*
-        composable(route= SurveyDetailsScreen.SurveyScreen.route){
-            UpdateProfileScreen(navController)
-        }
-         */
+
+        /*composable(route= SurveyDetailsScreen.SurveyScreen.route){
+            SurveyScreen(navController= navController)
+        }*/
+
     }
 }
 

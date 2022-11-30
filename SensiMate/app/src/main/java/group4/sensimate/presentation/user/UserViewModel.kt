@@ -41,6 +41,17 @@ class UserViewModel(
         }
     }
 
+    fun signInAsGuest(){
+        viewModelScope.launch {
+            _user.update { currentState ->
+                currentState.copy(
+                    username= "Guest",
+                    isLoggedIn = true
+                )
+            }
+        }
+    }
+
     fun signOut() {
         viewModelScope.launch {
             //isLoggedIn = false
@@ -99,7 +110,16 @@ class UserViewModel(
     var postalcode by mutableStateOf("")
         private set
 
+    var cookieCheckedState by mutableStateOf(true)
+        private set
+    var ageCheckedState by mutableStateOf(true)
+        private set
+
     //val enableButton= fullname.isNotBlank() && username.isNotBlank() && password.isNotBlank()
+
+    fun profileImageChange(newValue: String){
+        profileImage= newValue
+    }
 
     fun fullnameChange(newValue: String){
         fullname= newValue
@@ -129,8 +149,11 @@ class UserViewModel(
         postalcode= newValue
     }
 
-    fun profileImageChange(newValue: String){
-        profileImage= newValue
+    fun cookieCheckedStateChange(newValue: Boolean){
+        cookieCheckedState= newValue
     }
 
+    fun ageCheckedStateChange(newValue: Boolean){
+        ageCheckedState= newValue
+    }
 }
