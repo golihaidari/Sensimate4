@@ -7,7 +7,7 @@ import group4.sensimate.data.model.Question
 import group4.sensimate.data.model.Survey
 import group4.sensimate.presentation.survey.SurveyResult
 
-val surveyQuestions = mutableListOf(
+private val surveyQuestions = mutableListOf(
     Question(1,1,"who do like most?", answer= PossibleAnswer.SingleChoice( listOf<String>( "parent","friends","sibling"))),
     Question(1,2,"which sport do you like?", answer = PossibleAnswer.MultipleChoice( listOf<String>( "soccer", "tenis","chess"))),
     Question(1,3,"how do you feel about ux course?", answer = PossibleAnswer.Slider(

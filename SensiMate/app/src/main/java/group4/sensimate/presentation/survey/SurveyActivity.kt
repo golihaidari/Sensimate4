@@ -38,16 +38,13 @@ import com.siddroid.holi.brushes.GradientMixer
 import group4.sensimate.R
 import group4.sensimate.UserPreferences
 import group4.sensimate.data.model.*
-import group4.sensimate.data.repository.surveyQuestions
 import group4.sensimate.ui.theme.SensiMateTheme
-import java.io.FileOutputStream
 
 class SurveyActivity : ComponentActivity() {
     val viewModel: SurveyViewModel by viewModels {
         SurveyViewModelFactory()
     }
 
-    @SuppressLint("SdCardPath")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -69,7 +66,6 @@ class SurveyActivity : ComponentActivity() {
                         }
                     )
                 }
-                FileOutputStream("/data/user/0/group4.sensimate/files/Surveys.csv").apply { writeCsv(surveyQuestions) }
             }
         }
     }
