@@ -27,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import group4.sensimate.R
 import group4.sensimate.data.model.Event
 import group4.sensimate.presentation.navigation.graphs.SurveyDetailsScreen
