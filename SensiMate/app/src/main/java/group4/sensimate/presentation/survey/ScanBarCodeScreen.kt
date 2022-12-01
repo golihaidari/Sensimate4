@@ -1,6 +1,7 @@
 package group4.sensimate.presentation.survey
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.Toast
@@ -49,15 +50,16 @@ fun ScanBarCodeScreen(navController: NavController){
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        if(cameraPreview()) {
-            navController.navigate(SurveyDetailsScreen.LaunchSurvey.route)
-        }
+        cameraPreview(navController)
+
     }
 }
 
 
+@SuppressLint("RestrictedApi")
 @Composable
-fun cameraPreview():Boolean {
+fun cameraPreview(navController: NavController):Boolean {
+    var barcodeAccepted= false
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     var preview by remember { mutableStateOf<Preview?>(null) }
@@ -93,6 +95,13 @@ fun cameraPreview():Boolean {
                         barcode.rawValue?.let { barcodeValue ->
                             barCodeVal.value = barcodeValue
                             Toast.makeText(context, barcodeValue, Toast.LENGTH_SHORT).show()
+
+                            if(barCodeVal.value.isNotEmpty()){
+                                cameraExecutor.isShutdown
+                                preview?.camera?.close()
+                                barcodeAccepted= true
+                                navController.navigate(SurveyDetailsScreen.LaunchSurvey.route)
+                            }
                         }
                     }
                 }
@@ -117,8 +126,6 @@ fun cameraPreview():Boolean {
             }, ContextCompat.getMainExecutor(context))
         }
     )
-    if(barCodeVal.value.isNotEmpty()){
-        return true
-    }
-    return false
+
+    return barcodeAccepted
 }

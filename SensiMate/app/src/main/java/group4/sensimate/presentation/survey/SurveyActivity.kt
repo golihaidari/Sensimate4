@@ -39,6 +39,7 @@ import group4.sensimate.R
 import group4.sensimate.UserPreferences
 import group4.sensimate.data.model.*
 import group4.sensimate.ui.theme.SensiMateTheme
+import java.io.OutputStream
 
 class SurveyActivity : ComponentActivity() {
     val viewModel: SurveyViewModel by viewModels {
@@ -579,4 +580,7 @@ private fun SliderQuestion(
         )
     }
 }
+
+
+
 

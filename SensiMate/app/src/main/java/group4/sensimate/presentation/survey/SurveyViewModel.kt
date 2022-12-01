@@ -1,9 +1,16 @@
 package group4.sensimate.presentation.survey
 
+import android.content.Context
+import android.os.Environment
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.*
+import group4.sensimate.data.model.Question
 import group4.sensimate.data.repository.SurveyData
 import group4.sensimate.data.repository.SurveyRepository
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
 
 class SurveyViewModel (
@@ -37,9 +44,25 @@ class SurveyViewModel (
 
 
     fun computeResult(surveyQuestions: SurveyState.Questions) {
+        FileOutputStream("/data/user/0/group4.sensimate/files/Surveys.csv").apply { exportResult(surveyQuestions) }
         val answers = surveyQuestions.questionsState.mapNotNull { it.answer }
         val result = surveyRepository.getSurveyResult(answers)
         _surveyState.value = SurveyState.Result(surveyQuestions.surveyId, result)
+    }
+
+
+    private fun OutputStream.exportResult(question: SurveyState.Questions) {
+        val writer = bufferedWriter()
+
+        writer.write(""""SurveyId","Id","question","answer"""")
+        writer.newLine()
+        writer.write("${question.surveyId}")
+        writer.newLine()
+        question.questionsState.forEach{
+            writer.write("${it.questionIndex},${it.question},\"${it.answer}")
+            writer.newLine()
+        }
+        writer.flush()
     }
 
     private fun getLatestQuestionId(): Int? {
@@ -49,6 +72,7 @@ class SurveyViewModel (
         }
         return null
     }
+
 }
 
 

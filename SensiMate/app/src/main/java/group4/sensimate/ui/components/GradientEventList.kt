@@ -115,9 +115,7 @@ fun EventCard(event: Event, page: String, navController: NavController){
                 if(page =="Profile") {
                     val context = LocalContext.current
                     OutlinedButton(
-                        onClick = {
-                            //context.startActivity(Intent(context, SurveyActivity::class.java))
-                        },
+                        onClick = { /* should navigate to answer screen to see the result. but it is not implemented yet*/  },
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(Color.Transparent),
@@ -129,7 +127,6 @@ fun EventCard(event: Event, page: String, navController: NavController){
                 }else{
                     OutlinedButton(
                         onClick = {
-                            //navController.navigate(SurveyDetailsScreen.LaunchSurvey.route)
                             navController.navigate(SurveyDetailsScreen.ScanBarCode.route)
                         },
                         modifier = Modifier

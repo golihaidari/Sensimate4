@@ -28,7 +28,6 @@ sealed class PossibleAnswer {
     ) : PossibleAnswer()
 }
 sealed class Answer<T : PossibleAnswer> {
-    object PermissionsDenied : Answer<Nothing>()
     data class SingleChoice(val answer: String) : Answer<PossibleAnswer.SingleChoice>()
     data class MultipleChoice(val answersStringRes: Set<String>) : Answer<PossibleAnswer.MultipleChoice>()
     data class Slider(val answerValue: Float) : Answer<PossibleAnswer.Slider>()
