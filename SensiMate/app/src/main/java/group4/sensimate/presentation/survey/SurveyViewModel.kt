@@ -43,8 +43,8 @@ class SurveyViewModel (
     }
 
 
-    fun computeResult(surveyQuestions: SurveyState.Questions) {
-        FileOutputStream("/data/user/0/group4.sensimate/files/Surveys.csv").apply { exportResult(surveyQuestions) }
+    fun computeResult(surveyQuestions: SurveyState.Questions, filePath:File) {
+        FileOutputStream(filePath).apply { exportResult(surveyQuestions) }
         val answers = surveyQuestions.questionsState.mapNotNull { it.answer }
         val result = surveyRepository.getSurveyResult(answers)
         _surveyState.value = SurveyState.Result(surveyQuestions.surveyId, result)

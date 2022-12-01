@@ -2,17 +2,14 @@ package group4.sensimate.presentation.survey
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Environment
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.*
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -24,22 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.siddroid.holi.brushes.GradientMixer
 import group4.sensimate.R
-import group4.sensimate.UserPreferences
 import group4.sensimate.data.model.*
 import group4.sensimate.ui.theme.SensiMateTheme
-import java.io.OutputStream
 
 class SurveyActivity : ComponentActivity() {
     val viewModel: SurveyViewModel by viewModels {
@@ -50,12 +40,14 @@ class SurveyActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SensiMateTheme {
+                val filePath=  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/Surveys.csv")
+
                 val state = viewModel.surveyState.observeAsState().value?:return@SensiMateTheme
 
                 when (state) {
                     is SurveyState.Questions -> SurveyScreen(
                         questions = state,
-                        onDonePressed = { viewModel.computeResult(state) },
+                        onDonePressed = { viewModel.computeResult(state, filePath) },
                         onBackPressed = {
                             this.onBackPressedDispatcher.onBackPressed()
                         }
@@ -528,6 +520,7 @@ private fun CheckBoxQuestion(
                     )
                 }
             }
+
         }
     }
 }

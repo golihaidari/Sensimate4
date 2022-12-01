@@ -128,6 +128,7 @@ fun EventCard(event: Event, page: String, navController: NavController){
                     OutlinedButton(
                         onClick = {
                             navController.navigate(SurveyDetailsScreen.ScanBarCode.route)
+                            //navController.navigate(SurveyDetailsScreen.LaunchSurvey.route)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
