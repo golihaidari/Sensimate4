@@ -116,7 +116,7 @@ fun EventCard(event: Event, page: String, navController: NavController){
                     val context = LocalContext.current
                     OutlinedButton(
                         onClick = {
-                            context.startActivity(Intent(context, SurveyActivity::class.java))
+                            //context.startActivity(Intent(context, SurveyActivity::class.java))
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -129,8 +129,8 @@ fun EventCard(event: Event, page: String, navController: NavController){
                 }else{
                     OutlinedButton(
                         onClick = {
-                            navController.navigate(SurveyDetailsScreen.LaunchSurvey.route)
-                            //navController.navigate(SurveyDetailsScreen.ScanBarCode.route)
+                            //navController.navigate(SurveyDetailsScreen.LaunchSurvey.route)
+                            navController.navigate(SurveyDetailsScreen.ScanBarCode.route)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
