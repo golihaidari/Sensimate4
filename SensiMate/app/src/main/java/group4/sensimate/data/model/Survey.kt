@@ -1,6 +1,7 @@
 package group4.sensimate.data.model
 
 import androidx.compose.runtime.Immutable
+import java.io.OutputStream
 
 @Immutable
 data class Survey(
@@ -46,3 +47,15 @@ fun Answer.MultipleChoice.withAnswerSelected(
     return Answer.MultipleChoice(newStringRes)
 }
 
+fun OutputStream.writeCsv(question: List<Question>) {
+    val writer = bufferedWriter()
+
+    writer.write(""""SurveyId","Id","text","answer"""")
+    writer.newLine()
+    question.forEach{
+        writer.write("${it.SurveyId},${it.id},\"${it.text},${it.answer}")
+        writer.newLine()
+    }
+    writer.flush()
+
+}

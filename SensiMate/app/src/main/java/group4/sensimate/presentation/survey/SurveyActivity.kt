@@ -2,6 +2,7 @@ package group4.sensimate.presentation.survey
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Environment
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -38,7 +39,9 @@ import com.siddroid.holi.brushes.GradientMixer
 import group4.sensimate.R
 import group4.sensimate.UserPreferences
 import group4.sensimate.data.model.*
+import group4.sensimate.data.repository.surveyQuestions
 import group4.sensimate.ui.theme.SensiMateTheme
+import java.io.FileOutputStream
 import java.io.OutputStream
 
 class SurveyActivity : ComponentActivity() {
@@ -68,6 +71,7 @@ class SurveyActivity : ComponentActivity() {
                     )
                 }
             }
+            FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Surveys.csv")).apply { writeCsv(surveyQuestions) }
         }
     }
 
